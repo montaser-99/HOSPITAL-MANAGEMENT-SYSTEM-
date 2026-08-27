@@ -6,7 +6,6 @@
 
 using namespace std;
 
-
 // =====================================================
 // ==================== STORY 1 ========================
 // =====================================================
@@ -15,10 +14,10 @@ using namespace std;
 // PATIENT CLASS - BASIC FEATURES
 // =====================================================
 
-
 // ========== ENUMERATIONS ========== //
 
-enum Department {
+enum Department
+{
     CARDIOLOGY,
     NEUROLOGY,
     ORTHOPEDICS,
@@ -27,18 +26,19 @@ enum Department {
     GENERAL
 };
 
-enum RoomType {
+enum RoomType
+{
     GENERAL_WARD,
     ICU,
     PRIVATE_ROOM,
     SEMI_PRIVATE
 };
 
-
 // ========== EMERGENCY CASE CLASS ========== //
 // Advanced Feature: priority_queue
 
-class EmergencyCase {
+class EmergencyCase
+{
 private:
     int patientId;
     int severity;
@@ -50,13 +50,13 @@ public:
     int getSeverity() const;
 
     // Higher severity = higher priority
-    bool operator<(const EmergencyCase& other) const;
+    bool operator<(const EmergencyCase &other) const;
 };
-
 
 // ========== PATIENT CLASS ========== //
 
-class Patient {
+class Patient
+{
 private:
     int id;
     string name;
@@ -75,10 +75,8 @@ private:
     double bill;
 
 public:
-
     // Constructor
     Patient(int pid, string n, int a, string c);
-
 
     // ========== ORIGINAL FEATURES ========== //
 
@@ -100,7 +98,6 @@ public:
 
     bool getAdmissionStatus();
 
-
     // =====================================================
     // ==================== STORY 2 ========================
     // =====================================================
@@ -112,31 +109,75 @@ public:
     // =====================================================
 
     // Medical Tests
-    void displayPendingTests();
-
+    void displayPendingTests()
+    {
+        cout << "Pending Tests: " << endl;
+        queue<string> temp = testQueue;
+        while (!temp.empty())
+        {
+            cout << temp.front() << endl;
+            temp.pop();
+        }
+    }
 
     // Prescriptions
-    void addPrescription(string medicine);
+    void addPrescription(string medicine)
+    {
+        prescriptions.push_back(medicine);
+        addMedicalRecord("Prescription added: " + medicine);
+        bill += 100;
+    }
 
-    void displayPrescriptions();
-
+    void displayPrescriptions()
+    {
+        if (prescriptions.empty())
+        {
+            cout << "No prescriptions." << endl;
+            return;
+        }
+        cout << "Prescriptions:" << endl;
+        for (const string &medicine : prescriptions)
+        {
+            cout << medicine << endl;
+        }
+    }
 
     // Billing
-    void addBill(double amount);
+    void addBill(double amount)
+    {
+        bill += amount;
+    }
 
-    double getBill();
+    double getBill()
+    {
+        return bill;
+    }
 
-    void displayBill();
-
+    void displayBill()
+    {
+        cout << "========== PATIENT BILL ==========" << endl;
+        cout << "Patient ID: " << id << endl;
+        cout << "Patient Name: " << name << endl;
+        cout << "Total Bill: $" << bill << endl;
+        cout << "==================================" << endl;
+    }
 
     // Additional Getters
-    int getAge();
+    int getAge()
+    {
+        return age;
+    }
 
-    string getContact();
+    string getContact()
+    {
+        return contact;
+    }
 
-    RoomType getRoomType();
+    RoomType getRoomType()
+    {
+        return roomType;
+    }
 };
-
 
 // =====================================================
 // ==================== STORY 3 ========================
@@ -145,7 +186,8 @@ public:
 // APPOINTMENT MANAGEMENT
 // =====================================================
 
-class Doctor {
+class Doctor
+{
 private:
     int id;
     string name;
@@ -203,7 +245,6 @@ public:
         return departmentName(department);
     }
 
-
     // ========== NEW FEATURES ========== //
 
     // Display waiting patients
@@ -221,7 +262,6 @@ public:
         cout << endl;
     }
 
-
     // Cancel appointment
     void cancelAppointment(int patientId) {
         int n = appointmentQueue.size();
@@ -235,13 +275,11 @@ public:
         }
     }
 
-
     // Number of waiting patients
     int getAppointmentCount() {
         return appointmentQueue.size();
     }
 };
-
 
 // =====================================================
 // ==================== STORY 4 ========================
@@ -258,28 +296,24 @@ public:
 // BASIC INFORMATION DISPLAY
 // =====================================================
 
-class Hospital {
+class Hospital
+{
 private:
-
     // Main collections
     vector<Patient> patients;
 
     vector<Doctor> doctors;
 
-
     // Original emergency queue
     queue<int> emergencyQueue;
 
-
     // Advanced emergency queue
     priority_queue<EmergencyCase> priorityEmergencyQueue;
-
 
     // Counters
     int patientCounter;
 
     int doctorCounter;
-
 
     // ========== ROOM MANAGEMENT ========== //
 
@@ -291,12 +325,9 @@ private:
 
     int semiPrivateRooms;
 
-
 public:
-
     // Constructor
     Hospital();
-
 
     // =====================================================
     // PATIENT & DOCTOR REGISTRATION
@@ -305,15 +336,11 @@ public:
     int registerPatient(
         string name,
         int age,
-        string contact
-    );
-
+        string contact);
 
     int addDoctor(
         string name,
-        Department dept
-    );
-
+        Department dept);
 
     // =====================================================
     // PATIENT ADMISSION
@@ -321,21 +348,16 @@ public:
 
     void admitPatient(
         int patientId,
-        RoomType type
-    );
-
+        RoomType type);
 
     // =====================================================
     // NORMAL EMERGENCY
     // =====================================================
 
     void addEmergency(
-        int patientId
-    );
-
+        int patientId);
 
     int handleEmergency();
-
 
     // =====================================================
     // APPOINTMENTS
@@ -343,41 +365,31 @@ public:
 
     void bookAppointment(
         int doctorId,
-        int patientId
-    );
-
+        int patientId);
 
     // =====================================================
     // BASIC INFORMATION DISPLAY
     // =====================================================
 
     void displayPatientInfo(
-        int patientId
-    );
-
+        int patientId);
 
     void displayDoctorInfo(
-        int doctorId
-    );
-
+        int doctorId);
 
     // =====================================================
     // FIND PATIENT
     // =====================================================
 
-    Patient* findPatient(
-        int patientId
-    );
-
+    Patient *findPatient(
+        int patientId);
 
     // =====================================================
     // FIND DOCTOR
     // =====================================================
 
-    Doctor* findDoctor(
-        int doctorId
-    );
-
+    Doctor *findDoctor(
+        int doctorId);
 
     // =====================================================
     // ==================== STORY 5 ========================
@@ -391,7 +403,6 @@ public:
     // PRIORITY EMERGENCY
     // ROOM MANAGEMENT
     // =====================================================
-
 
     // =====================================================
     // SEARCH PATIENT BY NAME
@@ -596,7 +607,6 @@ public:
     return patientId;
 }
 
-
     // =====================================================
     // ROOM AVAILABILITY
     // =====================================================
@@ -631,7 +641,6 @@ public:
     cout << "Semi-Private Rooms: " << semiPrivateRooms << endl;
 }
 
-
     // =====================================================
     // ==================== STORY 6 ========================
     // =====================================================
@@ -644,13 +653,11 @@ public:
     // MAIN PROGRAM / INTEGRATION TESTING
     // =====================================================
 
-
     // =====================================================
     // DISPLAY ALL PATIENTS
     // =====================================================
 
     void displayAllPatients();
-
 
     // =====================================================
     // DISPLAY ALL DOCTORS
@@ -658,15 +665,12 @@ public:
 
     void displayAllDoctors();
 
-
     // =====================================================
     // DISPLAY DOCTOR APPOINTMENTS
     // =====================================================
 
     void displayDoctorAppointments(
-        int doctorId
-    );
-
+        int doctorId);
 
     // =====================================================
     // CANCEL APPOINTMENT
@@ -674,18 +678,14 @@ public:
 
     void cancelAppointment(
         int doctorId,
-        int patientId
-    );
-
+        int patientId);
 
     // =====================================================
     // DOCTOR SEES NEXT PATIENT
     // =====================================================
 
     void doctorSeePatient(
-        int doctorId
-    );
-
+        int doctorId);
 
     // =====================================================
     // HOSPITAL STATISTICS
@@ -693,7 +693,6 @@ public:
 
     void displayStatistics();
 };
-
 
 // =====================================================
 // ============== STORY 4 IMPLEMENTATION ===============
@@ -1064,10 +1063,10 @@ void Hospital::displayDoctorInfo(
 // EDGE CASES
 // =====================================================
 
-int main() {
+int main()
+{
 
     Hospital hospital;
-
 
     // =====================================================
     // TEST CASE 1
@@ -1078,25 +1077,19 @@ int main() {
         hospital.registerPatient(
             "John Doe",
             35,
-            "555-1234"
-        );
-
+            "555-1234");
 
     int p2 =
         hospital.registerPatient(
             "Jane Smith",
             28,
-            "555-5678"
-        );
-
+            "555-5678");
 
     int p3 =
         hospital.registerPatient(
             "Mike Johnson",
             45,
-            "555-9012"
-        );
-
+            "555-9012");
 
     // =====================================================
     // TEST CASE 2
@@ -1106,23 +1099,17 @@ int main() {
     int d1 =
         hospital.addDoctor(
             "Dr. Smith",
-            CARDIOLOGY
-        );
-
+            CARDIOLOGY);
 
     int d2 =
         hospital.addDoctor(
             "Dr. Brown",
-            NEUROLOGY
-        );
-
+            NEUROLOGY);
 
     int d3 =
         hospital.addDoctor(
             "Dr. Lee",
-            PEDIATRICS
-        );
-
+            PEDIATRICS);
 
     // =====================================================
     // TEST CASE 3
@@ -1131,23 +1118,17 @@ int main() {
 
     hospital.admitPatient(
         p1,
-        PRIVATE_ROOM
-    );
-
+        PRIVATE_ROOM);
 
     hospital.admitPatient(
         p2,
-        ICU
-    );
-
+        ICU);
 
     // Try admitting already admitted patient
 
     hospital.admitPatient(
         p1,
-        SEMI_PRIVATE
-    );
-
+        SEMI_PRIVATE);
 
     // =====================================================
     // TEST CASE 4
@@ -1156,37 +1137,27 @@ int main() {
 
     hospital.bookAppointment(
         d1,
-        p1
-    );
-
+        p1);
 
     hospital.bookAppointment(
         d1,
-        p2
-    );
-
+        p2);
 
     hospital.bookAppointment(
         d2,
-        p3
-    );
-
+        p3);
 
     // Invalid doctor
 
     hospital.bookAppointment(
         999,
-        p1
-    );
-
+        p1);
 
     // Invalid patient
 
     hospital.bookAppointment(
         d1,
-        999
-    );
-
+        999);
 
     // =====================================================
     // TEST CASE 5
@@ -1195,36 +1166,24 @@ int main() {
 
     hospital.requestPatientTest(
         p1,
-        "Blood Test"
-    );
-
+        "Blood Test");
 
     hospital.requestPatientTest(
         p1,
-        "X-Ray"
-    );
-
+        "X-Ray");
 
     hospital.requestPatientTest(
         p1,
-        "MRI"
-    );
-
+        "MRI");
 
     hospital.displayPatientTests(
-        p1
-    );
-
+        p1);
 
     hospital.performPatientTest(
-        p1
-    );
-
+        p1);
 
     hospital.displayPatientTests(
-        p1
-    );
-
+        p1);
 
     // =====================================================
     // TEST CASE 6
@@ -1235,14 +1194,11 @@ int main() {
 
     hospital.addEmergency(p1);
 
-
     int emergencyPatient =
         hospital.handleEmergency();
 
-
     emergencyPatient =
         hospital.handleEmergency();
-
 
     emergencyPatient =
         hospital.handleEmergency();
@@ -1254,9 +1210,7 @@ int main() {
     // =====================================================
 
     hospital.dischargePatient(
-        p1
-    );
-
+        p1);
 
     // =====================================================
     // TEST CASE 8
@@ -1264,34 +1218,22 @@ int main() {
     // =====================================================
 
     hospital.displayPatientInfo(
-        p1
-    );
-
+        p1);
 
     hospital.displayPatientInfo(
-        p2
-    );
-
+        p2);
 
     hospital.displayPatientInfo(
-        999
-    );
-
+        999);
 
     hospital.displayDoctorInfo(
-        d1
-    );
-
+        d1);
 
     hospital.displayDoctorInfo(
-        d2
-    );
-
+        d2);
 
     hospital.displayDoctorInfo(
-        999
-    );
-
+        999);
 
     // =====================================================
     // TEST CASE 9
@@ -1299,19 +1241,13 @@ int main() {
     // =====================================================
 
     hospital.displayDoctorAppointments(
-        d1
-    );
-
+        d1);
 
     hospital.doctorSeePatient(
-        d1
-    );
-
+        d1);
 
     hospital.displayDoctorAppointments(
-        d1
-    );
-
+        d1);
 
     // =====================================================
     // TEST CASE 10
@@ -1319,14 +1255,10 @@ int main() {
     // =====================================================
 
     hospital.searchPatientByName(
-        "John Doe"
-    );
-
+        "John Doe");
 
     hospital.searchPatientByName(
-        "Unknown Patient"
-    );
-
+        "Unknown Patient");
 
     // =====================================================
     // TEST CASE 11
@@ -1335,20 +1267,14 @@ int main() {
 
     hospital.prescribeMedicine(
         p1,
-        "Paracetamol"
-    );
-
+        "Paracetamol");
 
     hospital.prescribeMedicine(
         p1,
-        "Antibiotic"
-    );
-
+        "Antibiotic");
 
     hospital.displayPrescriptions(
-        p1
-    );
-
+        p1);
 
     // =====================================================
     // TEST CASE 12
@@ -1356,14 +1282,10 @@ int main() {
     // =====================================================
 
     hospital.displayPatientBill(
-        p1
-    );
-
+        p1);
 
     hospital.displayPatientBill(
-        p2
-    );
-
+        p2);
 
     // =====================================================
     // TEST CASE 13
@@ -1372,27 +1294,19 @@ int main() {
 
     hospital.addPriorityEmergency(
         p1,
-        2
-    );
-
+        2);
 
     hospital.addPriorityEmergency(
         p2,
-        5
-    );
-
+        5);
 
     hospital.addPriorityEmergency(
         p3,
-        3
-    );
-
+        3);
 
     hospital.addPriorityEmergency(
         p1,
-        4
-    );
-
+        4);
 
     // =====================================================
     // TEST CASE 14
@@ -1407,14 +1321,12 @@ int main() {
 
     hospital.handlePriorityEmergency();
 
-
     // =====================================================
     // TEST CASE 15
     // Room Management
     // =====================================================
 
     hospital.displayRoomStatus();
-
 
     // =====================================================
     // TEST CASE 16
@@ -1423,14 +1335,12 @@ int main() {
 
     hospital.displayAllPatients();
 
-
     // =====================================================
     // TEST CASE 17
     // Display All Doctors
     // =====================================================
 
     hospital.displayAllDoctors();
-
 
     // =====================================================
     // TEST CASE 18
@@ -1439,9 +1349,7 @@ int main() {
 
     hospital.cancelAppointment(
         d1,
-        p2
-    );
-
+        p2);
 
     // =====================================================
     // TEST CASE 19
@@ -1449,14 +1357,10 @@ int main() {
     // =====================================================
 
     hospital.displayDoctorAppointments(
-        d1
-    );
-
+        d1);
 
     hospital.displayDoctorAppointments(
-        d2
-    );
-
+        d2);
 
     // =====================================================
     // TEST CASE 20
@@ -1465,7 +1369,6 @@ int main() {
 
     hospital.displayStatistics();
 
-
     // =====================================================
     // TEST CASE 21
     // Edge Cases
@@ -1473,36 +1376,24 @@ int main() {
 
     Hospital emptyHospital;
 
-
     emptyHospital.displayPatientInfo(
-        1
-    );
-
+        1);
 
     emptyHospital.displayDoctorInfo(
-        1
-    );
-
+        1);
 
     emptyHospital.handleEmergency();
 
-
     emptyHospital.handlePriorityEmergency();
 
-
     emptyHospital.searchPatientByName(
-        "John Doe"
-    );
-
+        "John Doe");
 
     emptyHospital.displayAllPatients();
 
-
     emptyHospital.displayAllDoctors();
 
-
     emptyHospital.displayStatistics();
-
 
     return 0;
 }
