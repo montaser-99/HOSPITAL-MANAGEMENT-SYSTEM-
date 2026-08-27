@@ -397,107 +397,239 @@ public:
     // SEARCH PATIENT BY NAME
     // =====================================================
 
-    void searchPatientByName(
-        string name
-    );
+    void searchPatientByName(string name)
+{
+    bool found = false;
+
+    for (Patient &p : patients)
+    {
+        if (p.getName() == name)
+        {
+            cout << "Patient Found:" << endl;
+            cout << "ID: " << p.getId() << endl;
+            cout << "Name: " << p.getName() << endl;
+            cout << "Age: " << p.getAge() << endl;
+            cout << "Contact: " << p.getContact() << endl;
+            cout << "Admission Status: "
+                 << (p.getAdmissionStatus() ? "Admitted" : "Not Admitted")
+                 << endl;
+
+            found = true;
+        }
+    }
+
+    if (!found)
+    {
+        cout << "Patient not found." << endl;
+    }
+}
 
 
     // =====================================================
     // DISCHARGE PATIENT
     // =====================================================
 
-    void dischargePatient(
-        int patientId
-    );
+    void dischargePatient(int patientId)
+{
+    for (int i = 0; i < patients.size(); i++)
+    {
+        if (patients[i].getId() == patientId)
+        {
+            patients[i].dischargePatient();
+
+            cout << "Patient discharged successfully.\n";
+            return;
+        }
+    }
+
+    cout << "Patient not found.\n";
+}
 
 
     // =====================================================
     // REQUEST MEDICAL TEST
     // =====================================================
 
-    void requestPatientTest(
-        int patientId,
-        string testName
-    );
+    void requestPatientTest(int patientId, string testName)
+{
+    for (int i = 0; i < patients.size(); i++)
+    {
+        if (patients[i].getId() == patientId)
+        {
+            patients[i].requestTest(testName);
+
+            cout << "Test requested successfully.\n";
+            return;
+        }
+    }
+
+    cout << "Patient not found.\n";
+}
 
 
     // =====================================================
     // PERFORM MEDICAL TEST
     // =====================================================
 
-    void performPatientTest(
-        int patientId
-    );
+    void performPatientTest(int patientId)
+{
+    for (int i = 0; i < patients.size(); i++)
+    {
+        if (patients[i].getId() == patientId)
+        {
+            string test = patients[i].performTest();
+
+            cout << "Performed Test: " << test << endl;
+            return;
+        }
+    }
+
+    cout << "Patient not found.\n";
+}
 
 
     // =====================================================
     // DISPLAY PENDING TESTS
     // =====================================================
 
-    void displayPatientTests(
-        int patientId
-    );
+    void displayPatientTests(int patientId)
+{
+    for (int i = 0; i < patients.size(); i++)
+    {
+        if (patients[i].getId() == patientId)
+        {
+            patients[i].displayPendingTests();
+            return;
+        }
+    }
 
+    cout << "Patient not found.\n";
+}
 
     // =====================================================
     // ADD PRESCRIPTION
     // =====================================================
 
-    void prescribeMedicine(
-        int patientId,
-        string medicine
-    );
+    void prescribeMedicine(int patientId, string medicine)
+{
+    for (int i = 0; i < patients.size(); i++)
+    {
+        if (patients[i].getId() == patientId)
+        {
+            patients[i].addPrescription(medicine);
+
+            cout << "Medicine prescribed successfully.\n";
+            return;
+        }
+    }
+
+    cout << "Patient not found.\n";
+}
 
 
     // =====================================================
     // DISPLAY PRESCRIPTIONS
     // =====================================================
 
-    void displayPrescriptions(
-        int patientId
-    );
+    void displayPrescriptions(int patientId)
+{
+    for (int i = 0; i < patients.size(); i++)
+    {
+        if (patients[i].getId() == patientId)
+        {
+            patients[i].displayPrescriptions();
+            return;
+        }
+    }
 
+    cout << "Patient not found.\n";
+}
 
     // =====================================================
     // PATIENT BILL
     // =====================================================
 
-    void displayPatientBill(
-        int patientId
-    );
+    void displayPatientBill(int patientId)
+{
+    for (int i = 0; i < patients.size(); i++)
+    {
+        if (patients[i].getId() == patientId)
+        {
+            cout << "Patient Bill: " << patients[i].getBill() << endl;
+            return;
+        }
+    }
+
+    cout << "Patient not found.\n";
+}
 
 
     // =====================================================
     // PRIORITY EMERGENCY
     // =====================================================
 
-    void addPriorityEmergency(
-        int patientId,
-        int severity
-    );
+    void addPriorityEmergency(int patientId, int severity)
+{
+    priorityEmergencyQueue.push(EmergencyCase(patientId, severity));
+
+    cout << "Priority emergency added successfully.\n";
+}
 
 
     // =====================================================
     // HANDLE PRIORITY EMERGENCY
     // =====================================================
 
-    int handlePriorityEmergency();
+    int handlePriorityEmergency()
+{
+    if (priorityEmergencyQueue.empty())
+    {
+        cout << "No emergency cases.\n";
+        return -1;
+    }
+
+    int patientId =
+        priorityEmergencyQueue.top().getPatientId();
+
+    priorityEmergencyQueue.pop();
+
+    return patientId;
+}
 
 
     // =====================================================
     // ROOM AVAILABILITY
     // =====================================================
 
-    bool isRoomAvailable(
-        RoomType type
-    );
+    bool isRoomAvailable(RoomType type)
+{
+    if (type == GENERAL_WARD)
+        return generalRooms > 0;
+
+    if (type == ICU)
+        return icuRooms > 0;
+
+    if (type == PRIVATE_ROOM)
+        return privateRooms > 0;
+
+    if (type == SEMI_PRIVATE)
+        return semiPrivateRooms > 0;
+
+    return false;
+}
 
 
     // =====================================================
     // DISPLAY ROOM STATUS
     // =====================================================
 
-    void displayRoomStatus();
+    void displayRoomStatus()
+{
+    cout << "General Ward Rooms: " << generalRooms << endl;
+    cout << "ICU Rooms: " << icuRooms << endl;
+    cout << "Private Rooms: " << privateRooms << endl;
+    cout << "Semi-Private Rooms: " << semiPrivateRooms << endl;
+}
 
 
     // =====================================================
