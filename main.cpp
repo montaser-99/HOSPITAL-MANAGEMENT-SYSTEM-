@@ -155,36 +155,91 @@ private:
     queue<int> appointmentQueue;
 
 public:
-
     // Constructor
-    Doctor(int did, string n, Department d);
+    Doctor(int did, string n, Department d) {
+        id = did;
+        name = n;
+        department = d;
+    }
 
+    static string departmentName(Department d) {
+        switch (d) {
+            case CARDIOLOGY:  return "Cardiology";
+            case NEUROLOGY:   return "Neurology";
+            case ORTHOPEDICS: return "Orthopedics";
+            case PEDIATRICS:  return "Pediatrics";
+            case EMERGENCY:   return "Emergency";
+            case GENERAL:     return "General";
+        }
+        return "Unknown";
+    }
 
     // ========== ORIGINAL FEATURES ========== //
 
-    void addAppointment(int patientId);
+    void addAppointment(int patientId) {
+        appointmentQueue.push(patientId);
+    }
 
-    int seePatient();
+    int seePatient() {
+        if (appointmentQueue.empty()) {
+            return -1;
+        }
 
-    int getId();
+        int result = appointmentQueue.front();
+        appointmentQueue.pop();
 
-    string getName();
+        return result;
+    }
 
-    string getDepartment();
+    int getId() {
+        return id;
+    }
+
+    string getName() {
+        return name;
+    }
+
+    string getDepartment() {
+        return departmentName(department);
+    }
 
 
     // ========== NEW FEATURES ========== //
 
     // Display waiting patients
-    void displayAppointments();
+    void displayAppointments() {
+        int n = appointmentQueue.size();
+        for (int i = 0; i < n; i++) {
+            int currentPatientId = appointmentQueue.front();
+            appointmentQueue.pop();
+
+            cout << currentPatientId << " ";
+
+            appointmentQueue.push(currentPatientId);
+        }
+
+        cout << endl;
+    }
 
 
     // Cancel appointment
-    void cancelAppointment(int patientId);
+    void cancelAppointment(int patientId) {
+        int n = appointmentQueue.size();
+        for (int i = 0; i < n; i++) {
+            int currentPatientId = appointmentQueue.front();
+            appointmentQueue.pop();
+
+            if (patientId != currentPatientId) {
+                appointmentQueue.push(currentPatientId);
+            }
+        }
+    }
 
 
     // Number of waiting patients
-    int getAppointmentCount();
+    int getAppointmentCount() {
+        return appointmentQueue.size();
+    }
 };
 
 
