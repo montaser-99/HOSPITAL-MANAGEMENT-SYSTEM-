@@ -696,6 +696,366 @@ public:
 
 
 // =====================================================
+// ============== STORY 4 IMPLEMENTATION ===============
+// =====================================================
+
+
+// =====================================================
+// ========== HOSPITAL CONSTRUCTOR =====================
+// =====================================================
+
+Hospital::Hospital() {
+
+    patientCounter = 1;
+    doctorCounter = 1;
+
+    // Room capacities
+    generalRooms = 20;
+    icuRooms = 5;
+    privateRooms = 10;
+    semiPrivateRooms = 10;
+}
+
+
+// =====================================================
+// ========== REGISTER PATIENT =========================
+// =====================================================
+
+int Hospital::registerPatient(
+    string name,
+    int age,
+    string contact
+) {
+
+    Patient newPatient(
+        patientCounter,
+        name,
+        age,
+        contact
+    );
+
+    patients.push_back(newPatient);
+
+    return patientCounter++;
+}
+
+
+// =====================================================
+// ========== ADD DOCTOR ===============================
+// =====================================================
+
+int Hospital::addDoctor(
+    string name,
+    Department dept
+) {
+
+    Doctor newDoctor(
+        doctorCounter,
+        name,
+        dept
+    );
+
+    doctors.push_back(newDoctor);
+
+    return doctorCounter++;
+}
+
+
+// =====================================================
+// ========== FIND PATIENT =============================
+// =====================================================
+
+Patient* Hospital::findPatient(
+    int patientId
+) {
+
+    for (Patient& patient : patients) {
+
+        if (patient.getId() == patientId) {
+            return &patient;
+        }
+    }
+
+    return nullptr;
+}
+
+
+// =====================================================
+// ========== FIND DOCTOR ==============================
+// =====================================================
+
+Doctor* Hospital::findDoctor(
+    int doctorId
+) {
+
+    for (Doctor& doctor : doctors) {
+
+        if (doctor.getId() == doctorId) {
+            return &doctor;
+        }
+    }
+
+    return nullptr;
+}
+
+
+// =====================================================
+// ========== ADMIT PATIENT ============================
+// =====================================================
+
+void Hospital::admitPatient(
+    int patientId,
+    RoomType type
+) {
+
+    Patient* patient = findPatient(patientId);
+
+    // Patient not found
+    if (patient == nullptr) {
+
+        cout << "Patient with ID "
+             << patientId
+             << " not found."
+             << endl;
+
+        return;
+    }
+
+
+    // Check room availability
+    if (!isRoomAvailable(type)) {
+
+        cout << "No room available for this room type."
+             << endl;
+
+        return;
+    }
+
+
+    // Admit patient
+    patient->admitPatient(type);
+}
+
+
+// =====================================================
+// ========== ADD NORMAL EMERGENCY =====================
+// =====================================================
+
+void Hospital::addEmergency(
+    int patientId
+) {
+
+    // Make sure patient exists
+    Patient* patient = findPatient(patientId);
+
+    if (patient == nullptr) {
+
+        cout << "Patient with ID "
+             << patientId
+             << " not found."
+             << endl;
+
+        return;
+    }
+
+
+    // Add patient to FIFO emergency queue
+    emergencyQueue.push(patientId);
+}
+
+
+// =====================================================
+// ========== HANDLE NORMAL EMERGENCY ==================
+// =====================================================
+
+int Hospital::handleEmergency() {
+
+    if (emergencyQueue.empty()) {
+
+        cout << "No emergencies in queue."
+             << endl;
+
+        return -1;
+    }
+
+
+    // Get first patient
+    int patientId = emergencyQueue.front();
+
+    emergencyQueue.pop();
+
+
+    cout << "Handled emergency for patient: "
+         << patientId
+         << endl;
+
+
+    return patientId;
+}
+
+
+// =====================================================
+// ========== BOOK APPOINTMENT =========================
+// =====================================================
+
+void Hospital::bookAppointment(
+    int doctorId,
+    int patientId
+) {
+
+    Doctor* doctor = findDoctor(doctorId);
+
+    Patient* patient = findPatient(patientId);
+
+
+    // Check doctor
+    if (doctor == nullptr) {
+
+        cout << "Doctor with ID "
+             << doctorId
+             << " not found."
+             << endl;
+
+        return;
+    }
+
+
+    // Check patient
+    if (patient == nullptr) {
+
+        cout << "Patient with ID "
+             << patientId
+             << " not found."
+             << endl;
+
+        return;
+    }
+
+
+    // Add appointment
+    doctor->addAppointment(patientId);
+
+
+    cout << "Appointment booked for patient "
+         << patientId
+         << " with doctor "
+         << doctorId
+         << endl;
+}
+
+
+// =====================================================
+// ========== DISPLAY PATIENT INFORMATION ==============
+// =====================================================
+
+void Hospital::displayPatientInfo(
+    int patientId
+) {
+
+    Patient* patient = findPatient(patientId);
+
+
+    if (patient == nullptr) {
+
+        cout << "Patient with ID "
+             << patientId
+             << " not found."
+             << endl;
+
+        return;
+    }
+
+
+    cout << endl;
+    cout << "Patient Information:" << endl;
+
+
+    cout << "ID: "
+         << patient->getId()
+         << endl;
+
+
+    cout << "Name: "
+         << patient->getName()
+         << endl;
+
+
+    cout << "Admission Status: ";
+
+
+    if (patient->getAdmissionStatus()) {
+        cout << "Admitted";
+    }
+    else {
+        cout << "Not Admitted";
+    }
+
+
+    cout << endl;
+
+
+    // Display medical history
+    patient->displayHistory();
+}
+
+
+// =====================================================
+// ========== DISPLAY DOCTOR INFORMATION ===============
+// =====================================================
+
+void Hospital::displayDoctorInfo(
+    int doctorId
+) {
+
+    Doctor* doctor = findDoctor(doctorId);
+
+
+    if (doctor == nullptr) {
+
+        cout << "Doctor with ID "
+             << doctorId
+             << " not found."
+             << endl;
+
+        return;
+    }
+
+
+    cout << endl;
+    cout << "Doctor Information:" << endl;
+
+
+    cout << "ID: "
+         << doctor->getId()
+         << endl;
+
+
+    cout << "Name: "
+         << doctor->getName()
+         << endl;
+
+
+    cout << "Department: "
+         << doctor->getDepartment()
+         << endl;
+}
+
+
+// =====================================================
+// ==================== STORY 5 ========================
+// =====================================================
+// IMPLEMENTATION WILL BE ADDED IN STORY 5
+// =====================================================
+
+
+// =====================================================
+// ==================== STORY 6 ========================
+// =====================================================
+// IMPLEMENTATION WILL BE ADDED IN STORY 6
+// =====================================================
+
+
+// =====================================================
 // ==================== STORY 6 ========================
 // =====================================================
 // MAIN PROGRAM
@@ -886,9 +1246,6 @@ int main() {
 
     emergencyPatient =
         hospital.handleEmergency();
-
-
-    // No more emergencies
 
 
     // =====================================================
